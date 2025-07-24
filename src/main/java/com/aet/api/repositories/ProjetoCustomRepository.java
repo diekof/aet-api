@@ -31,7 +31,7 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
           v.veiculo_doc_numero as rntrc,
           CASE WHEN v.veiculo_bidirecional = 0 THEN 'Não' ELSE 'Sim' END AS bidirecional,
           p.projeto_comprimento as comprimento,
-          p.projeto_PBTC as projetoPBTC,
+          p.projeto_PBTC_total as projetoPBTC,
           cv.combinacao_veicular_desc as combinacao
         FROM aet04.projeto p
         INNER JOIN aet04.ordem_servico_servico oss ON oss.ordem_servico_servico_id = p.ordem_servico_servico_id

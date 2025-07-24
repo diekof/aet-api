@@ -19,7 +19,7 @@ public class ProjetoController {
     @Autowired
     private ProjetoService service;
 
-    @GetMapping("/{id}/partes")
+    @GetMapping("/{id}")
     public ResponseEntity<Map<String, List<? extends ProjetoParteDTO>>> buscarPartes(@PathVariable Long id) {
         return ResponseEntity.ok(service.listarPartesProjeto(id));
     }
