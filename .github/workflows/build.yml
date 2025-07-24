@@ -22,7 +22,7 @@ jobs:
         run: mvn -B clean package -Pprod
 
       - name: Upload WAR artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: aet-api-war
           path: target/*.war
