@@ -1,6 +1,9 @@
 package com.aet.api.service;
 
+import com.aet.api.dto.ProjetoCompletoDTO;
+import com.aet.api.dto.ProjetoEixosDetalheView;
 import com.aet.api.dto.ProjetoParteDTO;
+import com.aet.api.dto.ProjetoResumoEixosDTO;
 import com.aet.api.repositories.ProjetoCustomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +26,12 @@ public class ProjetoService {
         resultado.put("Rodizio", repository.findRodizio(projetoId));
 
         return resultado;
+    }
+
+    public ProjetoCompletoDTO buscarProjetoCompleto(Long projetoId) {
+        ProjetoResumoEixosDTO resumo = repository.buscarResumoPorProjeto(projetoId);
+        List<ProjetoEixosDetalheView> detalhes = repository.buscarDetalhesPorProjeto(projetoId);
+
+        return new ProjetoCompletoDTO(resumo, detalhes);
     }
 }

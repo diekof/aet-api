@@ -1,5 +1,7 @@
 package com.aet.api.resource;
 
+import com.aet.api.dto.ProjetoCompletoDTO;
+import com.aet.api.dto.ProjetoEixosDetalheView;
 import com.aet.api.dto.ProjetoParteDTO;
 import com.aet.api.service.ProjetoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +24,10 @@ public class ProjetoController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, List<? extends ProjetoParteDTO>>> buscarPartes(@PathVariable Long id) {
         return ResponseEntity.ok(service.listarPartesProjeto(id));
+    }
+
+    @GetMapping("/engenheiro/{id}")
+    public ProjetoCompletoDTO buscarDetalhesProjeto(@PathVariable("id") Long id) {
+        return service.buscarProjetoCompleto(id);
     }
 }
