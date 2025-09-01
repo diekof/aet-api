@@ -94,86 +94,88 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
     List<Unidade2DTO> findRodizio(Long projetoId);
 
     @Query(value = """
-SELECT 
-    p.projeto_id                                      AS projetoId,
-    SUM(TipoEixo_Peso)                                AS qtdTipoeixoPeso,
-    COUNT(DISTINCT tn.TVE_Nivel_Nivel)                AS niveis,
-    SUM(CASE WHEN tn.TVE_Nivel_Nivel = 1 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel1,
-    SUM(CASE WHEN tn.TVE_Nivel_Nivel = 2 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel2,
-    SUM(CASE WHEN tn.TVE_Nivel_Nivel = 3 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel3,
-    SUM(CASE WHEN tn.TVE_Nivel_Nivel = 4 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel4,
-
-    mv.modelo_veiculo_reducao_1ic   AS modeloVeiculoReducao1ic,
-    mv.modelo_veiculo_reducao_2ic   AS modeloVeiculoReducao2ic,
-    mv.modelo_veiculo_reducao_3ic   AS modeloVeiculoReducao3ic,
-    mv.modelo_veiculo_reducao_4ic   AS modeloVeiculoReducao4ic,
-    mv.modelo_veiculo_reducao_5ic   AS modeloVeiculoReducao5ic,
-    mv.modelo_veiculo_reducao_6ic   AS modeloVeiculoReducao6ic,
-    mv.modelo_veiculo_reducao_7ic   AS modeloVeiculoReducao7ic,
-    mv.modelo_veiculo_reducao_8ic   AS modeloVeiculoReducao8ic,
-    mv.modelo_veiculo_reducao_9ic   AS modeloVeiculoReducao9ic,
-    mv.modelo_veiculo_reducao_10ic  AS modeloVeiculoReducao10ic,
-    mv.modelo_veiculo_reducao_11ic  AS modeloVeiculoReducao11ic,
-    mv.modelo_veiculo_reducao_12ic  AS modeloVeiculoReducao12ic,
-    mv.modelo_veiculo_reducao_13ic  AS modeloVeiculoReducao13ic,
-    mv.modelo_veiculo_reducao_14ic  AS modeloVeiculoReducao14ic,
-    mv.modelo_veiculo_reducao_15ic  AS modeloVeiculoReducao15ic,
-    mv.modelo_veiculo_reducao_16ic  AS modeloVeiculoReducao16ic,
-    mv.modelo_veiculo_reducao_17ic  AS modeloVeiculoReducao17ic,
-    mv.modelo_veiculo_reducao_18ic  AS modeloVeiculoReducao18ic,
-    mv.modelo_veiculo_reducao_19ic  AS modeloVeiculoReducao19ic,
-    mv.modelo_veiculo_reducao_20ic  AS modeloVeiculoReducao20ic,
-
-    CASE 
-        WHEN COALESCE(mv.modelo_veiculo_reducao_1ic,  0) = 0 THEN 0
-        WHEN COALESCE(mv.modelo_veiculo_reducao_2ic,  0) = 0 THEN 1
-        WHEN COALESCE(mv.modelo_veiculo_reducao_3ic,  0) = 0 THEN 2
-        WHEN COALESCE(mv.modelo_veiculo_reducao_4ic,  0) = 0 THEN 3
-        WHEN COALESCE(mv.modelo_veiculo_reducao_5ic,  0) = 0 THEN 4
-        WHEN COALESCE(mv.modelo_veiculo_reducao_6ic,  0) = 0 THEN 5
-        WHEN COALESCE(mv.modelo_veiculo_reducao_7ic,  0) = 0 THEN 6
-        WHEN COALESCE(mv.modelo_veiculo_reducao_8ic,  0) = 0 THEN 7
-        WHEN COALESCE(mv.modelo_veiculo_reducao_9ic,  0) = 0 THEN 8
-        WHEN COALESCE(mv.modelo_veiculo_reducao_10ic, 0) = 0 THEN 9
-        WHEN COALESCE(mv.modelo_veiculo_reducao_11ic, 0) = 0 THEN 10
-        WHEN COALESCE(mv.modelo_veiculo_reducao_12ic, 0) = 0 THEN 11
-        WHEN COALESCE(mv.modelo_veiculo_reducao_13ic, 0) = 0 THEN 12
-        WHEN COALESCE(mv.modelo_veiculo_reducao_14ic, 0) = 0 THEN 13
-        WHEN COALESCE(mv.modelo_veiculo_reducao_15ic, 0) = 0 THEN 14
-        WHEN COALESCE(mv.modelo_veiculo_reducao_16ic, 0) = 0 THEN 15
-        WHEN COALESCE(mv.modelo_veiculo_reducao_17ic, 0) = 0 THEN 16
-        WHEN COALESCE(mv.modelo_veiculo_reducao_18ic, 0) = 0 THEN 17
-        WHEN COALESCE(mv.modelo_veiculo_reducao_19ic, 0) = 0 THEN 18
-        WHEN COALESCE(mv.modelo_veiculo_reducao_20ic, 0) = 0 THEN 19
-        ELSE 0
-    END AS qtdMarchaa,
-
-    mv.modelo_veiculo_coef_atrito AS coeficienteAtrito,
-    mv.modelo_veiculo_raio_dinam  AS raio,
-    mv.modelo_veiculo_resist_rolam AS resistenciaRolamento,
-    mv.modelo_veiculo_tipo_pneu   AS tipoPneu,
-    mv.modelo_veiculo_torque_max  AS torque,
-    mv.modelo_veiculo_reducao_max AS reducaoMax
-
-FROM aet04.projeto p
-JOIN aet04.ordem_servico_servico oss ON oss.ordem_servico_servico_id = p.ordem_servico_servico_id 
-JOIN aet04.veiculo v               ON oss.veiculo_id = v.veiculo_id 
-JOIN aet04.modelo_veiculo mv       ON mv.modelo_veiculo_id = v.modelo_veiculo_id 
-JOIN aet04.tipo_servico ts         ON ts.tipo_servico_id = oss.tipo_servico_id  
-JOIN aet04.tipo_veiculo tv         ON tv.tipo_veiculo_id  = ts.tipo_veiculo_id 
-JOIN aet04.tipo_veiculo_eixo tve   ON tve.tipo_veiculo_id = tv.tipo_veiculo_id 
-                                   AND tve.tipo_veiculoEixo_numeixos = p.projeto_num_eixos 
-                                   AND tve.modelo_veiculo_id = mv.modelo_veiculo_id
-JOIN aet04.tve_nivel tn            ON tn.tipo_veiculoEixo_id = tve.tipo_veiculoEixo_id
-JOIN aet04.tve_niveltipoeixo tn1   ON tn1.TVE_Nivel_id = tn.TVE_Nivel_id
-WHERE p.projeto_id = :projetoId 
-  AND tv.tipo_veiculo_ativo = 1
-  AND (
-        SELECT SUM(a.TipoEixo_distancia)
-        FROM aet04.tve_nivel b
-        JOIN aet04.tve_niveltipoeixo a ON a.TVE_Nivel_id = b.TVE_Nivel_id
-        WHERE b.tipo_veiculoEixo_id = tve.tipo_veiculoEixo_id
-      ) = p.projeto_comprimento
+            SELECT
+                p.projeto_id                                      AS projetoId,
+                SUM(TipoEixo_Peso)                                AS qtdTipoeixoPeso,
+                COUNT(DISTINCT tn.TVE_Nivel_Nivel)                AS niveis,
+                SUM(CASE WHEN tn.TVE_Nivel_Nivel = 1 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel1,
+                SUM(CASE WHEN tn.TVE_Nivel_Nivel = 2 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel2,
+                SUM(CASE WHEN tn.TVE_Nivel_Nivel = 3 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel3,
+                SUM(CASE WHEN tn.TVE_Nivel_Nivel = 4 AND tn1.TipoEixo_rodas > 0 THEN 1 ELSE 0 END) AS qtdNivel4,
+            
+                mv.modelo_veiculo_reducao_1ic   AS modeloVeiculoReducao1ic,
+                mv.modelo_veiculo_reducao_2ic   AS modeloVeiculoReducao2ic,
+                mv.modelo_veiculo_reducao_3ic   AS modeloVeiculoReducao3ic,
+                mv.modelo_veiculo_reducao_4ic   AS modeloVeiculoReducao4ic,
+                mv.modelo_veiculo_reducao_5ic   AS modeloVeiculoReducao5ic,
+                mv.modelo_veiculo_reducao_6ic   AS modeloVeiculoReducao6ic,
+                mv.modelo_veiculo_reducao_7ic   AS modeloVeiculoReducao7ic,
+                mv.modelo_veiculo_reducao_8ic   AS modeloVeiculoReducao8ic,
+                mv.modelo_veiculo_reducao_9ic   AS modeloVeiculoReducao9ic,
+                mv.modelo_veiculo_reducao_10ic  AS modeloVeiculoReducao10ic,
+                mv.modelo_veiculo_reducao_11ic  AS modeloVeiculoReducao11ic,
+                mv.modelo_veiculo_reducao_12ic  AS modeloVeiculoReducao12ic,
+                mv.modelo_veiculo_reducao_13ic  AS modeloVeiculoReducao13ic,
+                mv.modelo_veiculo_reducao_14ic  AS modeloVeiculoReducao14ic,
+                mv.modelo_veiculo_reducao_15ic  AS modeloVeiculoReducao15ic,
+                mv.modelo_veiculo_reducao_16ic  AS modeloVeiculoReducao16ic,
+                mv.modelo_veiculo_reducao_17ic  AS modeloVeiculoReducao17ic,
+                mv.modelo_veiculo_reducao_18ic  AS modeloVeiculoReducao18ic,
+                mv.modelo_veiculo_reducao_19ic  AS modeloVeiculoReducao19ic,
+                mv.modelo_veiculo_reducao_20ic  AS modeloVeiculoReducao20ic,
+            
+                CASE
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_1ic,  0) = 0 THEN 0
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_2ic,  0) = 0 THEN 1
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_3ic,  0) = 0 THEN 2
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_4ic,  0) = 0 THEN 3
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_5ic,  0) = 0 THEN 4
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_6ic,  0) = 0 THEN 5
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_7ic,  0) = 0 THEN 6
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_8ic,  0) = 0 THEN 7
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_9ic,  0) = 0 THEN 8
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_10ic, 0) = 0 THEN 9
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_11ic, 0) = 0 THEN 10
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_12ic, 0) = 0 THEN 11
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_13ic, 0) = 0 THEN 12
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_14ic, 0) = 0 THEN 13
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_15ic, 0) = 0 THEN 14
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_16ic, 0) = 0 THEN 15
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_17ic, 0) = 0 THEN 16
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_18ic, 0) = 0 THEN 17
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_19ic, 0) = 0 THEN 18
+                    WHEN COALESCE(mv.modelo_veiculo_reducao_20ic, 0) = 0 THEN 19
+                    ELSE 0
+                END AS qtdMarchaa,
+            
+                mv.modelo_veiculo_coef_atrito AS coeficienteAtrito,
+                mv.modelo_veiculo_raio_dinam  AS raio,
+                mv.modelo_veiculo_resist_rolam AS resistenciaRolamento,
+                mv.modelo_veiculo_tipo_pneu   AS tipoPneu,
+                mv.modelo_veiculo_torque_max  AS torque,
+                mv.modelo_veiculo_reducao_max AS reducaoMax,
+                mv.modelo_veiculo_reducao_eixo AS reducaoEixoTras,
+                mv.modelo_veiculo_potencia_max AS RPM
+            
+            FROM aet04.projeto p
+            JOIN aet04.ordem_servico_servico oss ON oss.ordem_servico_servico_id = p.ordem_servico_servico_id
+            JOIN aet04.veiculo v               ON oss.veiculo_id = v.veiculo_id
+            JOIN aet04.modelo_veiculo mv       ON mv.modelo_veiculo_id = v.modelo_veiculo_id
+            JOIN aet04.tipo_servico ts         ON ts.tipo_servico_id = oss.tipo_servico_id
+            JOIN aet04.tipo_veiculo tv         ON tv.tipo_veiculo_id  = ts.tipo_veiculo_id
+            JOIN aet04.tipo_veiculo_eixo tve   ON tve.tipo_veiculo_id = tv.tipo_veiculo_id
+                                               AND tve.tipo_veiculoEixo_numeixos = p.projeto_num_eixos
+                                               AND tve.modelo_veiculo_id = mv.modelo_veiculo_id
+            JOIN aet04.tve_nivel tn            ON tn.tipo_veiculoEixo_id = tve.tipo_veiculoEixo_id
+            JOIN aet04.tve_niveltipoeixo tn1   ON tn1.TVE_Nivel_id = tn.TVE_Nivel_id
+            WHERE p.projeto_id = 5
+              AND tv.tipo_veiculo_ativo = 1
+              AND (
+                    SELECT SUM(a.TipoEixo_distancia)
+                    FROM aet04.tve_nivel b
+                    JOIN aet04.tve_niveltipoeixo a ON a.TVE_Nivel_id = b.TVE_Nivel_id
+                    WHERE b.tipo_veiculoEixo_id = tve.tipo_veiculoEixo_id
+                  ) = p.projeto_comprimento
 """, nativeQuery = true)
     ProjetoResumoEixosDTO buscarResumoPorProjeto(@Param("projetoId") Long projetoId);
 

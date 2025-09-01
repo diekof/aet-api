@@ -42,4 +42,6 @@ public interface ProjetoResumoEixosDTO {
     String getTipoPneu();
     BigDecimal getTorque();
     BigDecimal getReducaoMax();
+    BigDecimal getReducaoEixoTras();
+    Integer getRPM();
 }
