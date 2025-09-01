@@ -168,7 +168,7 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
                                                AND tve.modelo_veiculo_id = mv.modelo_veiculo_id
             JOIN aet04.tve_nivel tn            ON tn.tipo_veiculoEixo_id = tve.tipo_veiculoEixo_id
             JOIN aet04.tve_niveltipoeixo tn1   ON tn1.TVE_Nivel_id = tn.TVE_Nivel_id
-            WHERE p.projeto_id = 5
+            WHERE p.projeto_id = :projetoId
               AND tv.tipo_veiculo_ativo = 1
               AND (
                     SELECT SUM(a.TipoEixo_distancia)
