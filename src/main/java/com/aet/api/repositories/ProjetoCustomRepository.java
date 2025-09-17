@@ -48,7 +48,7 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
     @Query(value = """
         SELECT
           'Unidade 2' as projetoParte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) + 1 AS numeroLinha,
+          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY pp.projetocarretas_principais_id) + 1 AS numeroLinha,
           p.projeto_id AS projetoId,
           c.carreta_placa as placa,
           c.carreta_ano_fab  as anoFab,
