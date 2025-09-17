@@ -17,11 +17,11 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
 
     @Query(value = """
         SELECT
-          'Unidade 1' as projeto_parte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY p.projeto_id) AS numero_linha,
-          p.projeto_id,
+          'Unidade 1' as projetoParte,
+          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY p.projeto_id) AS numeroLinha,
+          p.projeto_id AS projetoId,
           v.veiculo_placa as placa,
-          v.veiculo_ano_fabricacao as ano_fab,
+          v.veiculo_ano_fabricacao as anoFab,
           v.veiculo_chassi as chassi,
           mv.modelo_veiculo_marca as marca,
           mv.modelo_veiculo_nome as modelo,
@@ -40,18 +40,18 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
         INNER JOIN aet04.ordem_servico_servico oss ON oss.ordem_servico_servico_id = p.ordem_servico_servico_id
         INNER JOIN aet04.veiculo v ON v.veiculo_id = oss.veiculo_id
         INNER JOIN aet04.modelo_veiculo mv ON mv.modelo_veiculo_id = v.modelo_veiculo_id
-        INNER JOIN aet04.Combinacao_veicular cv ON cv.combinacao_veicular_id = p.combinacao_veicular_id
+        INNER JOIN aet04.combinacao_veicular cv ON cv.combinacao_veicular_id = p.combinacao_veicular_id
         WHERE p.projeto_id = :projetoId
         """, nativeQuery = true)
     List<Unidade1DTO> findUnidade1(Long projetoId);
 
     @Query(value = """
         SELECT
-          'Unidade 2' as projeto_parte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) + 1 AS numero_linha,
-          p.projeto_id,
+          'Unidade 2' as projetoParte,
+          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) + 1 AS numeroLinha,
+          p.projeto_id AS projetoId,
           c.carreta_placa as placa,
-          c.carreta_ano_fab  as ano_fab,
+          c.carreta_ano_fab  as anoFab,
           c.carreta_chassi as chassi,
           mv.modelo_veiculo_marca as marca,
           mv.modelo_veiculo_nome as modelo,
@@ -71,11 +71,11 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
 
     @Query(value = """
         SELECT
-          'Carretas Rodizio' as projeto_parte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) AS numero_linha,
-          p.projeto_id,
+          'Carretas Rodizio' as projetoParte,
+          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) AS numeroLinha,
+          p.projeto_id AS projetoId,
           c.carreta_placa as placa,
-          c.carreta_ano_fab  as ano_fab,
+          c.carreta_ano_fab  as anoFab,
           c.carreta_chassi as chassi,
           mv.modelo_veiculo_marca as marca,
           mv.modelo_veiculo_nome as modelo,
