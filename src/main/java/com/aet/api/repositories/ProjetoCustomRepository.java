@@ -47,49 +47,52 @@ public interface ProjetoCustomRepository extends JpaRepository<Projeto, Long> {
 
     @Query(value = """
         SELECT
-          'Unidade 2' as projetoParte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY pp.projetocarretas_principais_id) + 1 AS numeroLinha,
-          p.projeto_id AS projetoId,
-          c.carreta_placa as placa,
-          c.carreta_ano_fab  as anoFab,
-          c.carreta_chassi as chassi,
-          mv.modelo_veiculo_marca as marca,
-          mv.modelo_veiculo_nome as modelo,
-          c.carreta_peso_tara as tara,
-          c.carreta_renavam as renavam,
-          c.carreta_antt as rntrc,
-          c.carreta_qtd_eixo as rodaPorEixo,
-          c.carreta_num_eixos as numeroEixo
-        FROM aet04.projeto p
-        INNER JOIN aet04.projetocarretas_principais pp ON pp.projeto_id  = p.projeto_id
-        INNER JOIN aet04.carreta c ON c.carreta_id = pp.carreta_id
-        INNER JOIN aet04.modelo_veiculo mv ON mv.modelo_veiculo_id = c.carreta_modelo_id
-        INNER JOIN aet04.tipo_carroceria tc ON tc.tipo_carroceria_id = c.tipo_carroceria_id
-        WHERE p.projeto_id = :projetoId
+         'Unidade 2' as projetoParte,
+         ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY pp.projetocarretas_principais_id) + 1 AS numeroLinha,
+         p.projeto_id AS projetoId,
+         c.carreta_placa as placa,
+         c.carreta_ano_fab  as anoFab,
+         c.carreta_chassi as chassi,
+         mv.modelo_veiculo_marca as marca,
+         mv.modelo_veiculo_nome as modelo,
+         c.carreta_peso_tara as tara,
+         c.carreta_renavam as renavam,
+         c.carreta_antt as rntrc,
+         c.carreta_qtd_eixo as rodaPorEixo,
+         c.carreta_num_eixos as numeroEixo,
+         tc.tipo_carroceria_nome as tipoCarroceriaNome
+       FROM aet04.projeto p
+       INNER JOIN aet04.projetocarretas_principais pp ON pp.projeto_id  = p.projeto_id
+       INNER JOIN aet04.carreta c ON c.carreta_id = pp.carreta_id
+       INNER JOIN aet04.modelo_veiculo mv ON mv.modelo_veiculo_id = c.carreta_modelo_id
+       INNER JOIN aet04.tipo_carroceria tc ON tc.tipo_carroceria_id = c.tipo_carroceria_id
+       WHERE p.projeto_id=:projetoId
         """, nativeQuery = true)
     List<Unidade2DTO> findUnidade2(Long projetoId);
 
     @Query(value = """
         SELECT
-          'Carretas Rodizio' as projetoParte,
-          ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) AS numeroLinha,
-          p.projeto_id AS projetoId,
-          c.carreta_placa as placa,
-          c.carreta_ano_fab  as anoFab,
-          c.carreta_chassi as chassi,
-          mv.modelo_veiculo_marca as marca,
-          mv.modelo_veiculo_nome as modelo,
-          c.carreta_peso_tara as tara,
-          c.carreta_renavam as renavam,
-          c.carreta_antt as rntrc,
-          c.carreta_qtd_eixo as rodaPorEixo,
-          c.carreta_num_eixos as numeroEixo
-        FROM aet04.projeto p
-        INNER JOIN aet04.projetocarretas_rodizio  pp ON pp.projeto_id  = p.projeto_id
-        INNER JOIN aet04.carreta c ON c.carreta_id = pp.proj_carreta_rod_carreta_id
-        INNER JOIN aet04.modelo_veiculo mv ON mv.modelo_veiculo_id = c.carreta_modelo_id
-        INNER JOIN aet04.tipo_carroceria tc ON tc.tipo_carroceria_id = c.tipo_carroceria_id
-        WHERE p.projeto_id = :projetoId
+         'Carretas Rodizio' as projetoParte,
+         ROW_NUMBER() OVER (PARTITION BY p.projeto_id ORDER BY c.carreta_id) AS numeroLinha,
+         p.projeto_id AS projetoId,
+         c.carreta_placa as placa,
+         c.carreta_ano_fab  as anoFab,
+         c.carreta_chassi as chassi,
+         mv.modelo_veiculo_marca as marca,
+         mv.modelo_veiculo_nome as modelo,
+         c.carreta_peso_tara as tara,
+         c.carreta_renavam as renavam,
+         c.carreta_antt as rntrc,
+         c.carreta_qtd_eixo as rodaPorEixo,
+         c.carreta_num_eixos as numeroEixo,
+         tc.tipo_carroceria_nome as tipoCarroceriaNome
+       FROM aet04.projeto p
+       INNER JOIN aet04.projetocarretas_rodizio  pp ON pp.projeto_id  = p.projeto_id
+       INNER JOIN aet04.carreta c ON c.carreta_id = pp.proj_carreta_rod_carreta_id
+       INNER JOIN aet04.modelo_veiculo mv ON mv.modelo_veiculo_id = c.carreta_modelo_id
+       INNER JOIN aet04.tipo_carroceria tc ON tc.tipo_carroceria_id = c.tipo_carroceria_id
+       WHERE p.projeto_id=:projetoId
+            
         """, nativeQuery = true)
     List<Unidade2DTO> findRodizio(Long projetoId);
 
